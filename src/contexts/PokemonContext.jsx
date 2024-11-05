@@ -5,6 +5,7 @@ function reducer(state, action) {
   switch (action.type) {
     case "setPokemons":
       return { ...state, pokemons: action.payload };
+
     default:
       return state;
   }
@@ -14,6 +15,7 @@ const pokemonContext = createContext();
 
 function PokemonProvider({ children }) {
   const [{ pokemons }, dispatch] = useReducer(reducer, initialState);
+
   useEffect(() => {
     // Define the async function inside useEffect
     const fetchPokemons = async () => {
