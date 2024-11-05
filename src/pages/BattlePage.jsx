@@ -25,8 +25,10 @@ function BattlePage() {
   return (
     <div>
       <Header />
-      <main className="p-[3rem]">
+      <main className="py-[3rem] px-[5rem]">
         <Battle pokemonUser={pokemonUser} pokemonSystem={pokemonSystem} />
+
+        <h2 className="text-[1.4rem] text-white mt-[3rem]">Your Roaster</h2>
         <div className="flex flex-wrap gap-[2rem] p-[5rem]">
           {pokemons.map((pokemon) => (
             <PokemonCard
