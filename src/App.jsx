@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes , Route} from "react-router-dom";
-import Battle from "./pages/Battle";
+import BattlePage from "./pages/BattlePage";
 
 function App() {
 
   return (
     <BrowserRouter>
     <Routes>
-      <Route path="/battle" element={<Battle/>}/>
+      <Route path="/battle" element={<BattlePage/>}/>
     </Routes>
     </BrowserRouter>
   )

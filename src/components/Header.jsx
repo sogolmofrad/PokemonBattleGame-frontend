@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 
 function Header() {
     return (
-        <header className="header flex py-[3rem] px-[5rem] justify-between items-center">
+        <header className="header flex py-[3rem] px-[5rem] justify-between items-center bg-white">
             <div className="logo">
                 Pokemon
             </div>
