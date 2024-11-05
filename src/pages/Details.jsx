@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import Header from '../components/Header';
-
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import Header from "../components/Header";
 
 const Details = () => {
   const { id } = useParams();
@@ -13,7 +12,9 @@ const Details = () => {
   useEffect(() => {
     const fetchPokemonData = async () => {
       try {
-        const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+        const response = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon/${id}`
+        );
         setPokemon(response.data);
         setLoading(false);
       } catch (error) {
@@ -43,20 +44,27 @@ const Details = () => {
             <img
               src={pokemon.sprites.front_default}
               alt={pokemon.name}
-              className="w-44 h-44"/>
+              className="w-44 h-44"
+            />
             <p className="font-semibold text-gray-800">
-              {pokemon.types.map((type) => type.type.name).join(" · ")}</p>
+              {pokemon.types.map((type) => type.type.name).join(" · ")}
+            </p>
             <p className="text-gray-600 font-semibold mt-2">
-              H–[{pokemon.height / 10} m] W–[{pokemon.weight / 10} kg]</p>
+              H–[{pokemon.height / 10} m] W–[{pokemon.weight / 10} kg]
+            </p>
           </div>
-            {/* Divider */}
+          {/* Divider */}
           <div className="hidden md:block h-48 border-l border-gray-300 mx-6"></div>
           {/* Right column */}
           <div className="mt-6 md:mt-4 sm:mr-0 md:mr-20 md:w-1/2">
             {pokemon.stats.map((stat) => (
               <div key={stat.stat.name} className="flex items-center mb-4">
-                <span className="w-56 mr-2 text-gray-800 font-semibold capitalize text-right">{stat.stat.name}</span>
-                <span className="w-12 text-gray-700 text-right">{stat.base_stat}</span>
+                <span className="w-56 mr-2 text-gray-800 font-semibold capitalize text-right">
+                  {stat.stat.name}
+                </span>
+                <span className="w-12 text-gray-700 text-right">
+                  {stat.base_stat}
+                </span>
                 <div className="w-full bg-gray-200 rounded-full h-3 mx-2">
                   <div
                     className="bg-blue-500 h-3 rounded-full"
@@ -70,7 +78,8 @@ const Details = () => {
         {/* Btn */}
         <div className="w-full flex sm:items-center md:items-start">
           <button className="mt-8 sm:ml-0 md:ml-12 px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-700">
-            Add to Favorites</button>
+            Add to Favorites
+          </button>
         </div>
       </div>
     </div>
