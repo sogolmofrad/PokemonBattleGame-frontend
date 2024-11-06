@@ -32,7 +32,8 @@ function LoginPopup({ onClose }) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("https://pokemon-battle-game.onrender.com/api/v1/users/");
+      const response = await fetch("https://pokemon-battle-game.onrender.com/api/v1/users/"
+      );
       if (!response.ok) {
         const errorData = await response.json();
         alert(`Error: ${errorData.message || "Could not fetch users."}`);
@@ -46,7 +47,6 @@ function LoginPopup({ onClose }) {
         console.log("Found user:", foundUser);
 
         dispatch({ type: "setUser", payload: foundUser });
-
         onClose();
       } else {
         alert("User not found");
@@ -66,7 +66,9 @@ function LoginPopup({ onClose }) {
         >
           &times;
         </button>
-        <h2 className="text-2xl text-gray-800 font-semibold mb-6">Enter your username</h2>
+        <h2 className="text-2xl text-gray-800 font-semibold mb-6">
+            Enter your username
+            </h2>
         <input
           type="text"
           value={username}
@@ -74,7 +76,8 @@ function LoginPopup({ onClose }) {
           placeholder="Username"
           className="border rounded-md p-3 w-full mb-6"
         />
-        <button onClick={handleLogin} className="bg-purple-500 text-white px-6 py-2 rounded-md">
+        <button onClick={handleLogin} className="bg-purple-500 text-white px-6 py-2 rounded-md"
+        >
           Submit
         </button>
       </div>
