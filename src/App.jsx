@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import BattlePage from "./pages/BattlePage";
+
 import Details from "./pages/Details";
 import HomePage from "./pages/HomePage";
 import Favorites from "./pages/Favorites";
+import BattlePage from "./pages/BattlePage";
 import { PokemonProvider } from "./contexts/PokemonContext";
 
 function App() {
