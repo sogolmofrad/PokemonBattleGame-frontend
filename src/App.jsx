@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes , Route} from "react-router-dom";
-import Battle from "./pages/Battle";
+import Battle from "./pages/BattlePage";
 import Details from "./pages/Details";
 import HomePage from "./pages/HomePage";
 import Favorites from "./pages/Favorites";
