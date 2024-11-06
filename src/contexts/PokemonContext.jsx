@@ -1,26 +1,31 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
+import axios from "axios";
 
 const initialState = { 
   pokemons: [],
-  user: null, 
+  user: null,
   favorites: [],
-  isLoginPopupVisible: false 
+  isLoginPopupVisible: false,
 };
 function reducer(state, action) {
   switch (action.type) {
     case "setPokemons":
       return { ...state, pokemons: action.payload };
     case "setUser":
-      return { ...state, user: action.payload }; 
+      return { ...state, user: action.payload };
+    case "setFavorites":
+      return { ...state, favorites: action.payload };
     case "toggleLoginPopup":
       return { ...state, isLoginPopupVisible: !state.isLoginPopupVisible };
-   case "addToFavorites": 
-      return { 
-        ...state, 
-        favorites: [...state.favorites, action.payload] 
-      };
-    default:
-      return state;
+    case "addToFavorites":
+          return { ...state, favorites: [...state.favorites, action.payload] };
+    case "removeFromFavorites":
+        return {
+              ...state,
+              favorites: state.favorites.filter((pokemon) => pokemon.id !== action.payload),
+          };
+      default:
+          return state;
   }
 }
 
@@ -32,9 +37,7 @@ function PokemonProvider({ children }) {
     // Define the async function inside useEffect
     const fetchPokemons = async () => {
       try {
-        const response = await fetch(
-          "https://pokeapi.co/api/v2/pokemon?limit=50"
-        );
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=50");
         const data = await response.json();
 
         // Step 2: Fetch full details for each Pokémon
@@ -45,7 +48,7 @@ function PokemonProvider({ children }) {
 
         // Step 3: Wait for all promises to resolve and update the state
         const pokemonArray = await Promise.all(pokemonPromises);
-        dispatch({ type: "setPokemons", payload: pokemonArray }); // Set state with the full Pokémon array
+        dispatch({ type: "setPokemons", payload: pokemonArray });
       } catch (error) {
         console.error("Error fetching Pokémon:", error);
       }
@@ -53,16 +56,60 @@ function PokemonProvider({ children }) {
 
     fetchPokemons();
   }, []);
+
+  // Loading user data and their favorite Pokemon
+  useEffect(() => {
+    const fetchUserData = async () => {
+        if (!state.user || !state.user._id) return;
+        try {
+          const response = await axios.get(
+              `https://pokemon-battle-game.onrender.com/api/v1/users/${state.user._id}`
+          );
+          const favoriteIds = response.data.favPokemonIds;
+            // Using state.pokemons to access the list of Pokemon
+            const favoritePokemonDetails = state.pokemons.filter((p) => favoriteIds.includes(p.id));
+            dispatch({ type: "setFavorites", payload: favoritePokemonDetails });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
+    if (state.user) {
+        fetchUserData();
+    }
+}, [state.user, state.pokemons]);
+
+const handleAddToFavorites = (pokemon) => {
+  dispatch({ type: "addToFavorites", payload: pokemon });
+};
+
+const handleRemoveFromFavorites = async (pokemonId) => {
+  if (!state.user || !state.user._id) {
+    console.error("User is not logged in.");
+    return;
+    }
+    try {
+      await axios.put(
+        `https://pokemon-battle-game.onrender.com/api/v1/users/${state.user._id}/remove-fav-pokemon`, 
+        { pokemonId }
+      );
+      dispatch({ type: "removeFromFavorites", payload: pokemonId });
+    } catch (error) {
+      console.error("Error removing Pokémon from favorites:", error);
+    }
+  };
+
   return (
-    <pokemonContext.Provider value={{ ...state, dispatch }}>
-    {children}
-  </pokemonContext.Provider>
-);
+    <pokemonContext.Provider value={{ ...state, dispatch, handleAddToFavorites, handleRemoveFromFavorites }}>
+  {children}
+</pokemonContext.Provider>
+  );
 }
 function usePokemon() {
   const context = useContext(pokemonContext);
-  if (context === undefined)
-    throw new Error("value was used outside of the context");
+  if (context === undefined) {
+    throw new Error("usePokemon must be used within a PokemonProvider");
+  }
   return context;
 }
+
 export { PokemonProvider, usePokemon };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { usePokemon } from "../contexts/PokemonContext";
+import axios from "axios";
 
 function LoginPopup({ onClose }) {
   const [username, setUsername] = useState("");
@@ -7,11 +8,27 @@ function LoginPopup({ onClose }) {
   const { dispatch, user } = usePokemon();
 
   useEffect(() => {
-    if (!user && !isPopupInitialized) {
-      dispatch({ type: "toggleLoginPopup" });
-      setIsPopupInitialized(true); 
+    if (user && !isPopupInitialized) {
+      dispatch({ type: "toggleLoginPopup" }); 
+      setIsPopupInitialized(true);
     }
   }, [user, dispatch, isPopupInitialized]);
+
+  useEffect(() => {
+    if (user && user._id) {
+      const fetchFavorites = async () => {
+        try {
+          const response = await axios.get(
+            `https://pokemon-battle-game.onrender.com/api/v1/users/${user._id}/favorites`
+          );
+          dispatch({ type: "setFavorites", payload: response.data });
+        } catch (error) {
+          console.error("Error fetching favorites:", error);
+        }
+      };
+      fetchFavorites(); 
+    }
+  }, [user, dispatch]);
 
   const handleLogin = async () => {
     try {
@@ -21,15 +38,16 @@ function LoginPopup({ onClose }) {
         alert(`Error: ${errorData.message || "Could not fetch users."}`);
         return;
       }
-    
+
       const users = await response.json();
       const foundUser = users.find((user) => user.userName === username);
-  
+
       if (foundUser) {
-        console.log("Found user:", foundUser); 
-  
+        console.log("Found user:", foundUser);
+
         dispatch({ type: "setUser", payload: foundUser });
-        onClose(); 
+
+        onClose();
       } else {
         alert("User not found");
       }
@@ -38,11 +56,14 @@ function LoginPopup({ onClose }) {
       alert("An error occurred while trying to log in.");
     }
   };
-  
-return (
+
+  return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-8 rounded-lg shadow-lg relative w-[500px] h-[250px]">
-        <button onClick={onClose} className="absolute top-4 right-4 text-3xl font-normal text-gray-500 hover:text-gray-700">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-3xl font-normal text-gray-500 hover:text-gray-700"
+        >
           &times;
         </button>
         <h2 className="text-2xl text-gray-800 font-semibold mb-6">Enter your username</h2>
