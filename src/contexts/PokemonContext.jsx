@@ -13,6 +13,11 @@ function reducer(state, action) {
       return { ...state, user: action.payload }; 
     case "toggleLoginPopup":
       return { ...state, isLoginPopupVisible: !state.isLoginPopupVisible };
+   case "addToFavorites": 
+      return { 
+        ...state, 
+        favorites: [...state.favorites, action.payload] 
+      };
     default:
       return state;
   }

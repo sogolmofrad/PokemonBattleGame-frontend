@@ -2,32 +2,30 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "../components/Header";
+import { usePokemon } from "../contexts/PokemonContext";
 
 const Details = () => {
-  const { id } = useParams();
-  const [pokemon, setPokemon] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    const { id } = useParams();
+    const { pokemons, dispatch, favorites } = usePokemon();
+    const [pokemon, setPokemon] = useState(null);
 
-  useEffect(() => {
-    const fetchPokemonData = async () => {
-      try {
-        const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/${id}`
-        );
-        setPokemon(response.data);
-        setLoading(false);
-      } catch (error) {
-        setError("Failed to load Pokemon data.");
-        setLoading(false);
-      }
-    };
+    const handleAddToFavorites = () => {
+        if (!favorites.some((fav) => fav.id === pokemon.id)) {
+          dispatch({ type: "addToFavorites", payload: pokemon });
+        }
+      };
 
-    fetchPokemonData();
-  }, [id]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+    useEffect(() => {
+        const selectedPokemon = pokemons.find((p) => p.id === parseInt(id));
+    
+        if (selectedPokemon) {
+          setPokemon(selectedPokemon);
+        } else {
+          setPokemon(null); 
+        }
+      }, [id, pokemons]);
+    
+      if (!pokemon) return <p>Loading...</p>;
 
   return (
     <div>
@@ -77,7 +75,10 @@ const Details = () => {
         </div>
         {/* Btn */}
         <div className="w-full flex sm:items-center md:items-start">
-          <button className="mt-8 sm:ml-0 md:ml-12 px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-700">
+          <button
+            onClick={handleAddToFavorites}
+            className="mt-8 sm:ml-0 md:ml-12 px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-700"
+          >
             Add to Favorites
           </button>
         </div>

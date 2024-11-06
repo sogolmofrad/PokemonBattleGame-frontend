@@ -27,7 +27,7 @@ function Header() {
       <div>
         {user ? (
           <div className="text-center">
-            <span className="text-gray-800 font-semibold mr-4">
+            <span className="text-gray-800 font-medium mr-4">
               {user.firstName}
             </span>
             {/* <span className="text-gray-600 font-medium">, {user.country}</span> */}
@@ -35,7 +35,7 @@ function Header() {
         ) : (
           <button
             onClick={handleLoginClick}
-            className="border border-gray-800 text-gray-800 rounded-[6px] py-[7px] px-[12px] mr-4"
+            className="text-gray-800 font-medium mr-4"
           >
             Log in
           </button>
