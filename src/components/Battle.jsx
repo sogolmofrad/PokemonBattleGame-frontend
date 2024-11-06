@@ -3,8 +3,10 @@ import { useState } from "react";
 function Battle({ pokemonUser, pokemonSystem }) {
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState("");
+  const [hasFight, serHasFight] = useState(false);
 
   function handleFight() {
+    if (!pokemonUser || !pokemonUser) return;
     if (pokemonUser.base_stat > pokemonSystem.stats[0].base_stat) {
       setMessage("You Win!");
       setScore((cur) => cur + 250);
@@ -18,7 +20,9 @@ function Battle({ pokemonUser, pokemonSystem }) {
       setMessage("It was a Tie!");
       setScore((cur) => cur + 100);
     }
+    hasFight(true);
   }
+
   return (
     <>
       <h1 className="text-[1.4rem] text-white">Our Battle</h1>
@@ -50,8 +54,12 @@ function Battle({ pokemonUser, pokemonSystem }) {
         <button
           className="fightBtn bg-black text-white text-[1.2rem] py-[1rem] px-[2rem] rounded-md w-[16rem]"
           onClick={handleFight}
+          disabled={hasFight}
         >
           Fight!
+        </button>
+        <button className="fightBtn bg-black text-white text-[1.2rem] py-[1rem] px-[2rem] rounded-md w-[16rem]">
+          Reset
         </button>
         <div>{message}</div>
         <div>{score}</div>
