@@ -15,7 +15,6 @@ function BattlePage() {
       setPokemonSystem(pokemons[randomId]);
     }
   }, [pokemons]);
-  console.log(pokemonSystem);
 
   function handlePickPokemon(name, img, base_stat) {
     const userPokemon = { name, img, base_stat };
