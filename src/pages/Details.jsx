@@ -8,24 +8,21 @@ const Details = () => {
     const { id } = useParams();
     const { pokemons, dispatch, favorites } = usePokemon();
     const [pokemon, setPokemon] = useState(null);
-
-    const handleAddToFavorites = () => {
-        if (!favorites.some((fav) => fav.id === pokemon.id)) {
-          dispatch({ type: "addToFavorites", payload: pokemon });
-        }
-      };
-
+  
     useEffect(() => {
-        const selectedPokemon = pokemons.find((p) => p.id === parseInt(id));
-    
-        if (selectedPokemon) {
-          setPokemon(selectedPokemon);
-        } else {
-          setPokemon(null); 
-        }
-      }, [id, pokemons]);
-    
-      if (!pokemon) return <p>Loading...</p>;
+      const selectedPokemon = pokemons.find((p) => p.id === parseInt(id));
+      if (selectedPokemon) {
+        setPokemon(selectedPokemon);
+      }
+    }, [id, pokemons]);
+  
+    if (!pokemon) return <p>Loading...</p>;
+  
+    const handleAddToFavorites = () => {
+      if (!favorites.some((fav) => fav.id === pokemon.id)) {
+        dispatch({ type: 'addToFavorites', payload: pokemon });
+      }
+    };
 
   return (
     <div>

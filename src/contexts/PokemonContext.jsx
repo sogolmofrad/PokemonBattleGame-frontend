@@ -3,6 +3,7 @@ import { createContext, useContext, useReducer, useEffect } from "react";
 const initialState = { 
   pokemons: [],
   user: null, 
+  favorites: [],
   isLoginPopupVisible: false 
 };
 function reducer(state, action) {
