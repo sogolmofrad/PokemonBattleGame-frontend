@@ -1,10 +1,18 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
 
-const initialState = { pokemons: [] };
+const initialState = { 
+  pokemons: [],
+  user: null, 
+  isLoginPopupVisible: false 
+};
 function reducer(state, action) {
   switch (action.type) {
     case "setPokemons":
       return { ...state, pokemons: action.payload };
+    case "setUser":
+      return { ...state, user: action.payload }; 
+    case "toggleLoginPopup":
+      return { ...state, isLoginPopupVisible: !state.isLoginPopupVisible };
     default:
       return state;
   }
@@ -13,7 +21,7 @@ function reducer(state, action) {
 const pokemonContext = createContext();
 
 function PokemonProvider({ children }) {
-  const [{ pokemons }, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     // Define the async function inside useEffect
     const fetchPokemons = async () => {
@@ -40,10 +48,10 @@ function PokemonProvider({ children }) {
     fetchPokemons();
   }, []);
   return (
-    <pokemonContext.Provider value={{ pokemons, dispatch }}>
-      {children}
-    </pokemonContext.Provider>
-  );
+    <pokemonContext.Provider value={{ ...state, dispatch }}>
+    {children}
+  </pokemonContext.Provider>
+);
 }
 function usePokemon() {
   const context = useContext(pokemonContext);

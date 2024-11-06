@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
+import { usePokemon } from "../contexts/PokemonContext";
 
 function Header() {
+  const { user, dispatch } = usePokemon();
+
+  const handleLoginClick = () => {
+    dispatch({ type: "toggleLoginPopup" });
+  };
+
   return (
     <header className="header flex py-[3rem] px-[5rem] justify-between items-center bg-white">
       <div className="logo">Pokemon</div>
-      <nav>
-        <ul className="flex gap-[2rem] ">
+      <nav className="flex-1 flex justify-center"> 
+        <ul className="flex gap-[2rem] items-center">
           <li>
             <Link to="/">Home</Link>
           </li>
@@ -15,16 +22,33 @@ function Header() {
           <li>
             <Link to="/leaderboard">Leaderboard</Link>
           </li>
-          <li>
-            <Link
-              to="/battle"
-              className="bg-[#9B44E5] text-white rounded-[6px] py-[5px] px-[10px]"
-            >
-              Let&apos;s Fight!
-            </Link>
-          </li>
         </ul>
       </nav>
+      <div>
+        {user ? (
+          <div className="text-center">
+            <span className="text-gray-800 font-semibold mr-4">
+              {user.firstName}
+            </span>
+            {/* <span className="text-gray-600 font-medium">, {user.country}</span> */}
+          </div>
+        ) : (
+          <button
+            onClick={handleLoginClick}
+            className="border border-gray-800 text-gray-800 rounded-[6px] py-[7px] px-[12px] mr-4"
+          >
+            Log in
+          </button>
+        )}
+      </div>
+      <div>
+        <Link
+          to="/battle"
+          className="bg-[#9B44E5] text-white rounded-[6px] py-[8px] px-[14px]"
+        >
+          Let&apos;s Fight!
+        </Link>
+      </div>
     </header>
   );
 }
