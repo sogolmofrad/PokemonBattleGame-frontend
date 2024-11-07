@@ -20,19 +20,13 @@ function Header() {
   return (
     <header className="header flex py-[3rem] px-[5rem] items-center bg-white">
       <div className="logo mr-auto">Pokemon</div>
-      <nav className="flex-1 flex justify-center">
-        <ul className="flex gap-8 items-center">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/favorites">My Favorites</Link>
-          </li>
-          <li>
-            <Link to="/leaderboard">Leaderboard</Link>
-          </li>
-        </ul>
-      </nav>
+      <nav className="absolute left-1/2 transform -translate-x-1/2">
+      <ul className="flex gap-[2rem] items-center">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/favorites">My Favorites</Link></li>
+        <li><Link to="/leaderboard">Leaderboard</Link></li>
+      </ul>
+    </nav>
       <div className="flex gap-[2rem] mr-[2rem]">
         {user ? (
           <div className="text-center">
