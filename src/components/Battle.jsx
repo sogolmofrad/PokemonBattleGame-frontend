@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { usePokemon } from "../contexts/PokemonContext";
 import axios from "axios";
+import { useAuth } from "../contexts/AuthUserContext";
 
 const systemId = "672b55a839572d7d3f7a7127";
 function Battle({ pokemonUser, pokemonSystem }) {
@@ -8,7 +8,7 @@ function Battle({ pokemonUser, pokemonSystem }) {
   const [systemScore, setSystemScore] = useState(0);
   const [message, setMessage] = useState("");
   const [hasFight, setHasFight] = useState(false);
-  const { user } = usePokemon();
+  const { user } = useAuth();
   async function sendBattleOutcomeToApi(playerRed, playerBlue) {
     try {
       await axios.post(
@@ -51,8 +51,8 @@ function Battle({ pokemonUser, pokemonSystem }) {
       userId: systemId,
       score: updatedSystemScore,
     };
-
-    sendBattleOutcomeToApi(playerRed, playerBlue);
+    console.log(playerRed, playerBlue);
+    // sendBattleOutcomeToApi(playerRed, playerBlue);
 
     setHasFight(true);
   }
