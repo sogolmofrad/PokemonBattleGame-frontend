@@ -14,10 +14,10 @@ function Header() {
   };
 
   return (
-    <header className="header flex py-[3rem] px-[5rem] justify-between items-center bg-white">
-      <div className="logo">Pokemon</div>
-      <nav className="flex-1 flex justify-center">
-        <ul className="flex gap-[2rem] items-center">
+    <header className="header flex py-[3rem] px-[5rem] items-center bg-white">
+  <div className="logo mr-auto">Pokemon</div>
+  <nav className="flex-1 flex justify-center">
+        <ul className="flex gap-8 items-center">
           <li>
             <Link to="/">Home</Link>
           </li>

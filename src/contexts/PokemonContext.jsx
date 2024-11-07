@@ -1,27 +1,24 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
+import { useAuth } from './AuthUserContext';
 import axios from "axios";
 
 const initialState = {
   pokemons: [],
-
   favorites: [],
 };
+
 function reducer(state, action) {
   switch (action.type) {
     case "setPokemons":
       return { ...state, pokemons: action.payload };
-
     case "setFavorites":
       return { ...state, favorites: action.payload };
-
     case "addToFavorites":
       return { ...state, favorites: [...state.favorites, action.payload] };
     case "removeFromFavorites":
       return {
         ...state,
-        favorites: state.favorites.filter(
-          (pokemon) => pokemon.id !== action.payload
-        ),
+        favorites: state.favorites.filter((pokemon) => pokemon.id !== action.payload),
       };
     default:
       return state;
@@ -30,17 +27,15 @@ function reducer(state, action) {
 const pokemonContext = createContext();
 
 function PokemonProvider({ children }) {
+  const { user, isAuthenticated } = useAuth(); 
   const [state, dispatch] = useReducer(reducer, initialState);
 
   //fetch the pokemon
   useEffect(() => {
     const fetchPokemons = async () => {
       try {
-        const response = await fetch(
-          "https://pokeapi.co/api/v2/pokemon?limit=50"
-        );
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=50");
         const data = await response.json();
-
         const pokemonPromises = data.results.map(async (pokemon) => {
           const pokemonResponse = await fetch(pokemon.url);
           return await pokemonResponse.json();
@@ -59,13 +54,12 @@ function PokemonProvider({ children }) {
   // Loading user data and their favorite Pokemon
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!state.user || !state.user._id) return;
+      if (!user || !user._id) return;
       try {
         const response = await axios.get(
-          `https://pokemon-battle-game.onrender.com/api/v1/users/${state.user._id}`
+          `https://pokemon-battle-game.onrender.com/api/v1/users/${user._id}`
         );
         const favoriteIds = response.data.favPokemonIds;
-        // Using state.pokemons to access the list of Pokemon
         const favoritePokemonDetails = state.pokemons.filter((p) =>
           favoriteIds.includes(p.id)
         );
@@ -74,23 +68,33 @@ function PokemonProvider({ children }) {
         console.error("Error fetching user data:", error);
       }
     };
-    if (state.user) {
-      fetchUserData();
-    }
-  }, [state.user, state.pokemons]);
+    if (user) fetchUserData();
+  }, [user, state.pokemons]);
 
-  const handleAddToFavorites = (pokemon) => {
-    dispatch({ type: "addToFavorites", payload: pokemon });
+  const handleAddToFavorites = async (pokemon) => {
+    if (!isAuthenticated || !user || !user._id) { 
+      console.error("Please log in to add Pokémon to favorites.");
+      return;
+    }
+    try {
+      await axios.put(
+        `https://pokemon-battle-game.onrender.com/api/v1/users/${user._id}/add-fav-pokemon`,
+        { pokemonId: pokemon.id }
+      );
+      dispatch({ type: "addToFavorites", payload: pokemon });
+    } catch (error) {
+      console.error("Error adding Pokémon to favorites:", error);
+    }
   };
 
   const handleRemoveFromFavorites = async (pokemonId) => {
-    if (!state.user || !state.user._id) {
+    if (!isAuthenticated || !user || !user._id) { 
       console.error("User is not logged in.");
       return;
     }
     try {
       await axios.put(
-        `https://pokemon-battle-game.onrender.com/api/v1/users/${state.user._id}/remove-fav-pokemon`,
+        `https://pokemon-battle-game.onrender.com/api/v1/users/${user._id}/remove-fav-pokemon`,
         { pokemonId }
       );
       dispatch({ type: "removeFromFavorites", payload: pokemonId });

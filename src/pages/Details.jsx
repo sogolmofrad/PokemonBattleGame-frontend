@@ -7,7 +7,7 @@ import { usePokemon } from "../contexts/PokemonContext";
 const Details = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { pokemons, dispatch, favorites, user } = usePokemon();
+    const { pokemons, favorites, handleAddToFavorites } = usePokemon();
     const [pokemon, setPokemon] = useState(null);
 
     useEffect(() => {
@@ -23,23 +23,10 @@ const Details = () => {
 
     if (!pokemon) return <p>Loading...</p>;
 
-    const handleAddToFavorites = async () => {
-        if (!user || !user._id) {
-            alert("Please log in to add Pokémon to favorites.");
-            return;
-        }
-    
+    const handleAdd = () => {
         if (!favorites.some((fav) => fav.id === pokemon.id)) {
-            try {
-                await axios.put(
-                    `https://pokemon-battle-game.onrender.com/api/v1/users/${user._id}/add-fav-pokemon`, 
-                    { pokemonId: pokemon.id }
-                );
-                dispatch({ type: 'addToFavorites', payload: pokemon });
-                navigate("/favorites");
-            } catch (error) {
-                console.error("Error adding Pokémon to favorites:", error);
-            }
+            handleAddToFavorites(pokemon);
+            navigate("/favorites");
         } else {
             alert("This Pokémon is already in your favorites.");
         }
@@ -50,7 +37,9 @@ const Details = () => {
             <Header />
             <div className="min-h-screen p-8 flex flex-col items-center">
                 <div className="w-full flex justify-center">
-                <h1 className="text-3xl text-white mb-6 mt-4 text-center">{pokemon.name} [{pokemon.id}]</h1>
+                    <h1 className="text-3xl text-white mb-6 mt-4 text-center">
+                        {pokemon.name} [{pokemon.id}]
+                    </h1>
                 </div>
                 <div className="w-full md:max-w-5xl bg-white rounded-lg shadow-lg p-6 flex flex-col sm:max-w-6xl md:ml-12 md:mr-12 md:flex-row items-center md:justify-between relative">
                     {/* Left column */}
@@ -92,9 +81,10 @@ const Details = () => {
                 {/* Btn */}
                 <div className="w-full flex justify-center">
                     <button
-                        onClick={handleAddToFavorites}
+                        onClick={handleAdd}
                         className="mt-8 sm:ml-0 md:ml-12 px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-700"
-                    >Add to Favorites
+                    >
+                        Add to Favorites
                     </button> 
                 </div>
             </div>
