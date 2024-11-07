@@ -8,7 +8,7 @@ function LoginPopup({ onClose }) {
   const { dispatch, user } = usePokemon();
 
   useEffect(() => {
-    if (user && !isPopupInitialized) {
+    if (!user && !isPopupInitialized) {
       dispatch({ type: "toggleLoginPopup" }); 
       setIsPopupInitialized(true);
     }
