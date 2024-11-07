@@ -1,17 +1,22 @@
 import { Link } from "react-router-dom";
-import { usePokemon } from "../contexts/PokemonContext";
+
+import { useAuth } from "../contexts/AuthUserContext";
+import LoginPopup from "./LoginPopup";
 
 function Header() {
-  const { user, dispatch } = usePokemon();
+  const { user, isLoginPopupVisible, dispatch } = useAuth();
 
   const handleLoginClick = () => {
+    dispatch({ type: "toggleLoginPopup" });
+  };
+  const handleClosePopup = () => {
     dispatch({ type: "toggleLoginPopup" });
   };
 
   return (
     <header className="header flex py-[3rem] px-[5rem] justify-between items-center bg-white">
       <div className="logo">Pokemon</div>
-      <nav className="flex-1 flex justify-center"> 
+      <nav className="flex-1 flex justify-center">
         <ul className="flex gap-[2rem] items-center">
           <li>
             <Link to="/">Home</Link>
@@ -49,6 +54,13 @@ function Header() {
           Let&apos;s Fight!
         </Link>
       </div>
+      {isLoginPopupVisible && (
+        <div className="login-popup">
+          <div className="popup-content">
+            <LoginPopup onClose={handleClosePopup} />
+          </div>
+        </div>
+      )}
     </header>
   );
 }

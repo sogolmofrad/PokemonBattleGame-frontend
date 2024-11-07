@@ -1,23 +1,18 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
 
-const initialState = { 
+const initialState = {
   pokemons: [],
-  user: null, 
   favorites: [],
-  isLoginPopupVisible: false 
 };
 function reducer(state, action) {
   switch (action.type) {
     case "setPokemons":
       return { ...state, pokemons: action.payload };
-    case "setUser":
-      return { ...state, user: action.payload }; 
-    case "toggleLoginPopup":
-      return { ...state, isLoginPopupVisible: !state.isLoginPopupVisible };
-   case "addToFavorites": 
-      return { 
-        ...state, 
-        favorites: [...state.favorites, action.payload] 
+
+    case "addToFavorites":
+      return {
+        ...state,
+        favorites: [...state.favorites, action.payload],
       };
     default:
       return state;
@@ -28,8 +23,9 @@ const pokemonContext = createContext();
 
 function PokemonProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  //fetch the pokemon
   useEffect(() => {
-    // Define the async function inside useEffect
     const fetchPokemons = async () => {
       try {
         const response = await fetch(
@@ -37,15 +33,13 @@ function PokemonProvider({ children }) {
         );
         const data = await response.json();
 
-        // Step 2: Fetch full details for each Pokémon
         const pokemonPromises = data.results.map(async (pokemon) => {
           const pokemonResponse = await fetch(pokemon.url);
           return await pokemonResponse.json();
         });
 
-        // Step 3: Wait for all promises to resolve and update the state
         const pokemonArray = await Promise.all(pokemonPromises);
-        dispatch({ type: "setPokemons", payload: pokemonArray }); // Set state with the full Pokémon array
+        dispatch({ type: "setPokemons", payload: pokemonArray });
       } catch (error) {
         console.error("Error fetching Pokémon:", error);
       }
@@ -55,9 +49,9 @@ function PokemonProvider({ children }) {
   }, []);
   return (
     <pokemonContext.Provider value={{ ...state, dispatch }}>
-    {children}
-  </pokemonContext.Provider>
-);
+      {children}
+    </pokemonContext.Provider>
+  );
 }
 function usePokemon() {
   const context = useContext(pokemonContext);
