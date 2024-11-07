@@ -7,6 +7,7 @@ import BattlePage from "./pages/BattlePage";
 import { PokemonProvider } from "./contexts/PokemonContext";
 import { AuthUserProvider } from "./contexts/AuthUserContext";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import LeaderBoard from "./pages/LeaderBoard";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/leaderboard" element={<LeaderBoard />} />
           </Routes>
         </BrowserRouter>
       </PokemonProvider>
