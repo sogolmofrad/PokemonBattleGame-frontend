@@ -9,7 +9,7 @@ function BattlePage() {
   const { pokemons } = usePokemon();
   const [pokemonUser, setPokemonUser] = useState({});
   const [pokemonSystem, setPokemonSystem] = useState({});
-  const { user } = useAuth();
+  const { favorites } = usePokemon();
 
   useEffect(() => {
     if (pokemons.length > 0) {
@@ -22,8 +22,6 @@ function BattlePage() {
     const userPokemon = { name, img, base_stat };
     setPokemonUser(userPokemon);
   }
-
-  const pokFavorites = user.favPokemonIds.map((id) => pokemons[id]);
 
   return (
     <div>
@@ -38,7 +36,7 @@ function BattlePage() {
 
         <h2 className="text-[1.4rem] text-white mt-[3rem]">Your Roaster</h2>
         <div className="flex flex-wrap gap-[2rem] p-[5rem]">
-          {pokFavorites.map((pokemon) => (
+          {favorites.map((pokemon) => (
             <PokemonCard
               img={pokemon.sprites.front_default}
               key={pokemon.name}
