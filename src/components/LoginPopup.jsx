@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { usePokemon } from "../contexts/PokemonContext";
 import axios from "axios";
 
@@ -32,7 +32,8 @@ function LoginPopup({ onClose }) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("https://pokemon-battle-game.onrender.com/api/v1/users/"
+      const response = await fetch(
+        "https://pokemon-battle-game.onrender.com/api/v1/users/"
       );
       if (!response.ok) {
         const errorData = await response.json();
@@ -67,8 +68,8 @@ function LoginPopup({ onClose }) {
           &times;
         </button>
         <h2 className="text-2xl text-gray-800 font-semibold mb-6">
-            Enter your username
-            </h2>
+          Enter your username
+        </h2>
         <input
           type="text"
           value={username}
@@ -76,7 +77,9 @@ function LoginPopup({ onClose }) {
           placeholder="Username"
           className="border rounded-md p-3 w-full mb-6"
         />
-        <button onClick={handleLogin} className="bg-purple-500 text-white px-6 py-2 rounded-md"
+        <button
+          onClick={handleLogin}
+          className="bg-purple-500 text-white px-6 py-2 rounded-md"
         >
           Submit
         </button>

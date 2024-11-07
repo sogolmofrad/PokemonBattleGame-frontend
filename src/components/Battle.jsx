@@ -1,26 +1,60 @@
 import { useState } from "react";
+import { usePokemon } from "../contexts/PokemonContext";
+import axios from "axios";
 
+const systemId = "672b55a839572d7d3f7a7127";
 function Battle({ pokemonUser, pokemonSystem }) {
-  const [score, setScore] = useState(0);
+  const [userScore, setUserScore] = useState(0);
+  const [systemScore, setSystemScore] = useState(0);
   const [message, setMessage] = useState("");
-  const [hasFight, serHasFight] = useState(false);
-
+  const [hasFight, setHasFight] = useState(false);
+  const { user } = usePokemon();
+  async function sendBattleOutcomeToApi(playerRed, playerBlue) {
+    try {
+      await axios.post(
+        "https://pokemon-battle-game.onrender.com/api/v1/battle-outcomes",
+        { playerRed, playerBlue }
+      );
+      console.log("the fight result has been sent to api successfully");
+    } catch (error) {
+      throw new Error("there was an error posting data to api");
+    }
+  }
   function handleFight() {
-    if (!pokemonUser || !pokemonUser) return;
+    if (!pokemonUser || !pokemonSystem) return;
+
+    let updatedUserScore = userScore;
+    let updatedSystemScore = systemScore;
+
     if (pokemonUser.base_stat > pokemonSystem.stats[0].base_stat) {
       setMessage("You Win!");
-      setScore((cur) => cur + 250);
+      updatedUserScore += 250;
+      updatedSystemScore = Math.max(0, updatedSystemScore - 50);
     } else if (pokemonUser.base_stat < pokemonSystem.stats[0].base_stat) {
       setMessage("You Lose!");
-      setScore((cur) => {
-        if (cur === 0) return 0;
-        else return cur - 50;
-      });
+      updatedUserScore = Math.max(0, updatedUserScore - 50);
+      updatedSystemScore += 250;
     } else {
       setMessage("It was a Tie!");
-      setScore((cur) => cur + 100);
+      updatedUserScore += 100;
+      updatedSystemScore += 100;
     }
-    hasFight(true);
+
+    setUserScore(updatedUserScore);
+    setSystemScore(updatedSystemScore);
+
+    const playerRed = {
+      userId: user._id,
+      score: updatedUserScore,
+    };
+    const playerBlue = {
+      userId: systemId,
+      score: updatedSystemScore,
+    };
+
+    sendBattleOutcomeToApi(playerRed, playerBlue);
+
+    setHasFight(true);
   }
 
   return (
@@ -62,7 +96,7 @@ function Battle({ pokemonUser, pokemonSystem }) {
           Reset
         </button>
         <div>{message}</div>
-        <div>{score}</div>
+        <div>{userScore}</div>
       </div>
     </>
   );
