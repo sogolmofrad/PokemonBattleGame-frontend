@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
-import { usePokemon } from "../contexts/PokemonContext";
+
 import axios from "axios";
+
+
+import { useAuth } from "../contexts/AuthUserContext";
+
 
 function LoginPopup({ onClose }) {
   const [username, setUsername] = useState("");
   const [isPopupInitialized, setIsPopupInitialized] = useState(false);
-  const { dispatch, user } = usePokemon();
+  const { dispatch, user } = useAuth();
 
   useEffect(() => {
     if (!user && !isPopupInitialized) {

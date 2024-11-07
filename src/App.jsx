@@ -5,19 +5,37 @@ import HomePage from "./pages/HomePage";
 import Favorites from "./pages/Favorites";
 import BattlePage from "./pages/BattlePage";
 import { PokemonProvider } from "./contexts/PokemonContext";
+import { AuthUserProvider } from "./contexts/AuthUserContext";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function App() {
   return (
-    <PokemonProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/battle" element={<BattlePage />} />
-          <Route path="/pokemon/:id" element={<Details />} />
-          <Route path="/favorites" element={<Favorites />} />
-        </Routes>
-      </BrowserRouter>
-    </PokemonProvider>
+    <AuthUserProvider>
+      <PokemonProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/battle"
+              element={
+                <ProtectedRoute>
+                  <BattlePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/pokemon/:id" element={<Details />} />
+            <Route
+              path="/favorites"
+              element={
+                <ProtectedRoute>
+                  <Favorites />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </PokemonProvider>
+    </AuthUserProvider>
   );
 }
 
