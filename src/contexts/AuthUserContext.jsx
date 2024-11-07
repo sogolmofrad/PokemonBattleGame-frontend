@@ -11,7 +11,8 @@ function reducer(state, action) {
       return { ...state, user: action.payload, isAuthenticated: true };
     case "toggleLoginPopup":
       return { ...state, isLoginPopupVisible: !state.isLoginPopupVisible };
-
+    case "logout":
+      return { ...initialState };
     default:
       return state;
   }
