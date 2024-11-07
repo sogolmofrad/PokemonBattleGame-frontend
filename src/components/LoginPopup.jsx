@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 
+import axios from "axios";
+
+
 import { useAuth } from "../contexts/AuthUserContext";
+
 
 function LoginPopup({ onClose }) {
   const [username, setUsername] = useState("");
@@ -9,10 +13,26 @@ function LoginPopup({ onClose }) {
 
   useEffect(() => {
     if (!user && !isPopupInitialized) {
-      dispatch({ type: "toggleLoginPopup" });
+      dispatch({ type: "toggleLoginPopup" }); 
       setIsPopupInitialized(true);
     }
   }, [user, dispatch, isPopupInitialized]);
+
+  useEffect(() => {
+    if (user && user._id) {
+      const fetchFavorites = async () => {
+        try {
+          const response = await axios.get(
+            `https://pokemon-battle-game.onrender.com/api/v1/users/${user._id}/favorites`
+          );
+          dispatch({ type: "setFavorites", payload: response.data });
+        } catch (error) {
+          console.error("Error fetching favorites:", error);
+        }
+      };
+      fetchFavorites(); 
+    }
+  }, [user, dispatch]);
 
   const handleLogin = async () => {
     try {

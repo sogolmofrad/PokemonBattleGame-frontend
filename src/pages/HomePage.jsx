@@ -20,18 +20,20 @@ function HomePage() {
     <div>
       <Header />
       {isLoginPopupVisible && <LoginPopup onClose={handleClosePopup} />}
-      <main className="py-[3rem] px-[5rem]">
-        <h1 className="text-[1.2rem] font-semibold text-white">All Pokemons</h1>
-        <div className="flex flex-wrap gap-[2rem] p-[5rem]">
-          {pokemons.map((pokemon) => (
-            <PokemonCard
-              img={pokemon.sprites.front_default}
-              key={pokemon.name}
-              name={pokemon.name}
-              onClick={() => handleCardClick(pokemon.id)}
-            />
-          ))}
-        </div>
+
+      <main className="min-h-screen p-8 flex flex-col items-center py-[3rem] px-[5rem]">
+      <h1 className="text-3xl text-white mb-6">Welcome to Pokémon Battle!</h1>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {pokemons.map((pokemon) => (
+    <PokemonCard
+      img={pokemon.sprites.front_default}
+      key={pokemon.name}
+      name={pokemon.name}
+      onClick={() => handleCardClick(pokemon.id)}
+    />
+  ))}
+</div>
+
       </main>
     </div>
   );
