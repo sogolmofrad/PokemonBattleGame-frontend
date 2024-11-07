@@ -1,14 +1,22 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthUserContext";
+import { usePokemon } from "../contexts/PokemonContext";
 
 const systemId = "672b55a839572d7d3f7a7127";
-function Battle({ pokemonUser, pokemonSystem }) {
+function Battle({
+  pokemonUser,
+  pokemonSystem,
+  setPokemonSystem,
+  setPokemonUser,
+}) {
   const [userScore, setUserScore] = useState(0);
   const [systemScore, setSystemScore] = useState(0);
   const [message, setMessage] = useState("");
   const [hasFight, setHasFight] = useState(false);
+
   const { user } = useAuth();
+  const { pokemons } = usePokemon();
   async function sendBattleOutcomeToApi(playerRed, playerBlue) {
     try {
       await axios.post(
@@ -21,7 +29,7 @@ function Battle({ pokemonUser, pokemonSystem }) {
     }
   }
   function handleFight() {
-    if (!pokemonUser || !pokemonSystem) return;
+    if (!pokemonUser.name || !pokemonSystem.name) return;
 
     let updatedUserScore = userScore;
     let updatedSystemScore = systemScore;
@@ -52,11 +60,19 @@ function Battle({ pokemonUser, pokemonSystem }) {
       score: updatedSystemScore,
     };
     console.log(playerRed, playerBlue);
-    // sendBattleOutcomeToApi(playerRed, playerBlue);
+    sendBattleOutcomeToApi(playerRed, playerBlue);
 
     setHasFight(true);
   }
 
+  function handleReset() {
+    const randomId = Math.floor(Math.random() * pokemons.length);
+    setPokemonSystem(pokemons[randomId]);
+    setPokemonUser({});
+    setHasFight(false);
+    setSystemScore(0);
+    setUserScore(0);
+  }
   return (
     <>
       <h1 className="text-[1.4rem] text-white">Our Battle</h1>
@@ -92,7 +108,10 @@ function Battle({ pokemonUser, pokemonSystem }) {
         >
           Fight!
         </button>
-        <button className="fightBtn bg-black text-white text-[1.2rem] py-[1rem] px-[2rem] rounded-md w-[16rem]">
+        <button
+          className="fightBtn bg-black text-white text-[1.2rem] py-[1rem] px-[2rem] rounded-md w-[16rem]"
+          onClick={handleReset}
+        >
           Reset
         </button>
         <div>{message}</div>

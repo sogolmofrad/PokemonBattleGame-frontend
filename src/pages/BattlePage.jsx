@@ -25,7 +25,12 @@ function BattlePage() {
     <div>
       <Header />
       <main className="py-[3rem] px-[5rem]">
-        <Battle pokemonUser={pokemonUser} pokemonSystem={pokemonSystem} />
+        <Battle
+          pokemonUser={pokemonUser}
+          pokemonSystem={pokemonSystem}
+          setPokemonSystem={setPokemonSystem}
+          setPokemonUser={setPokemonUser}
+        />
 
         <h2 className="text-[1.4rem] text-white mt-[3rem]">Your Roaster</h2>
         <div className="flex flex-wrap gap-[2rem] p-[5rem]">

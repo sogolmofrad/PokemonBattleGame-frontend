@@ -3,15 +3,19 @@ import PokemonCard from "../components/PokemonCard";
 import { usePokemon } from "../contexts/PokemonContext";
 import LoginPopup from "../components/LoginPopup";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthUserContext";
 
 function HomePage() {
-  const { pokemons, isLoginPopupVisible, dispatch } = usePokemon();
+  const { pokemons } = usePokemon();
+  const { isLoginPopupVisible, dispatch } = useAuth();
   const navigate = useNavigate();
 
   const handleCardClick = (pokemonId) => {
     navigate(`/pokemon/${pokemonId}`);
   };
-
+  const handleClosePopup = () => {
+    dispatch({ type: "toggleLoginPopup" });
+  };
   return (
     <div>
       <Header />
