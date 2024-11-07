@@ -24,7 +24,14 @@ function App() {
               }
             />
             <Route path="/pokemon/:id" element={<Details />} />
-            <Route path="/favorites" element={<Favorites />} />
+            <Route
+              path="/favorites"
+              element={
+                <ProtectedRoute>
+                  <Favorites />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </PokemonProvider>
