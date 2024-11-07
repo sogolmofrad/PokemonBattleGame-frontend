@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthUserContext";
 import LoginPopup from "./LoginPopup";
-import { useEffect } from "react";
 
 function Header() {
   const { user, isLoginPopupVisible, dispatch, isAuthenticated } = useAuth();
@@ -57,12 +56,21 @@ function Header() {
         )}
       </div>
       <div>
-        <Link
-          to="/battle"
-          className="bg-[#9B44E5] text-white rounded-[6px] py-[8px] px-[14px]"
-        >
-          Let&apos;s Fight!
-        </Link>
+        {isAuthenticated ? (
+          <Link
+            to="/battle"
+            className="bg-[#9B44E5] text-white rounded-[6px] py-[8px] px-[14px]"
+          >
+            Let&apos;s Fight!
+          </Link>
+        ) : (
+          <button
+            onClick={handleLoginClick}
+            className="bg-[#9B44E5] text-white rounded-[6px] py-[8px] px-[14px]"
+          >
+            Login to Fight!
+          </button>
+        )}
       </div>
       {isLoginPopupVisible && (
         <div className="login-popup">
