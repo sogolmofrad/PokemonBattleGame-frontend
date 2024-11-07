@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthUserContext";
 import LoginPopup from "./LoginPopup";
+import { useEffect } from "react";
 
 function Header() {
-  const { user, isLoginPopupVisible, dispatch } = useAuth();
+  const { user, isLoginPopupVisible, dispatch, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handleLoginClick = () => {
     dispatch({ type: "toggleLoginPopup" });
@@ -12,11 +14,14 @@ function Header() {
   const handleClosePopup = () => {
     dispatch({ type: "toggleLoginPopup" });
   };
-
+  const logout = () => {
+    dispatch({ type: "logout" });
+    navigate("/");
+  };
   return (
     <header className="header flex py-[3rem] px-[5rem] items-center bg-white">
-  <div className="logo mr-auto">Pokemon</div>
-  <nav className="flex-1 flex justify-center">
+      <div className="logo mr-auto">Pokemon</div>
+      <nav className="flex-1 flex justify-center">
         <ul className="flex gap-8 items-center">
           <li>
             <Link to="/">Home</Link>
@@ -29,7 +34,7 @@ function Header() {
           </li>
         </ul>
       </nav>
-      <div>
+      <div className="flex gap-[2rem] mr-[2rem]">
         {user ? (
           <div className="text-center">
             <span className="text-gray-800 font-medium mr-4">
@@ -42,7 +47,12 @@ function Header() {
             onClick={handleLoginClick}
             className="text-gray-800 font-medium mr-4"
           >
-            Log in
+            Login
+          </button>
+        )}
+        {isAuthenticated && (
+          <button className="text-gray-800 font-medium mr-4" onClick={logout}>
+            Logout
           </button>
         )}
       </div>
