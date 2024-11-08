@@ -2,9 +2,16 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthUserContext";
 import LoginPopup from "./LoginPopup";
+import SignupPopup from "./SignupPopup";
 
 function Header() {
-  const { user, isLoginPopupVisible, dispatch, isAuthenticated } = useAuth();
+  const {
+    user,
+    isLoginPopupVisible,
+    dispatch,
+    isAuthenticated,
+    isSignupPopupVisible,
+  } = useAuth();
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -12,6 +19,12 @@ function Header() {
   };
   const handleClosePopup = () => {
     dispatch({ type: "toggleLoginPopup" });
+  };
+  const handleSignUpClick = () => {
+    dispatch({ type: "toggleSignUpPopup" });
+  };
+  const handleCloseSignUp = () => {
+    dispatch({ type: "toggleSignUpPopup" });
   };
   const logout = () => {
     dispatch({ type: "logout" });
@@ -21,12 +34,18 @@ function Header() {
     <header className="header flex py-[3rem] px-[5rem] items-center bg-white">
       <div className="logo mr-auto">Pokemon</div>
       <nav className="absolute left-1/2 transform -translate-x-1/2">
-      <ul className="flex gap-[2rem] items-center">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/favorites">My Favorites</Link></li>
-        <li><Link to="/leaderboard">Leaderboard</Link></li>
-      </ul>
-    </nav>
+        <ul className="flex gap-[2rem] items-center">
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/favorites">My Favorites</Link>
+          </li>
+          <li>
+            <Link to="/leaderboard">Leaderboard</Link>
+          </li>
+        </ul>
+      </nav>
       <div className="flex gap-[2rem] mr-[2rem]">
         {user ? (
           <div className="text-center">
@@ -43,9 +62,16 @@ function Header() {
             Login
           </button>
         )}
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <button className="text-gray-800 font-medium mr-4" onClick={logout}>
             Logout
+          </button>
+        ) : (
+          <button
+            className="text-gray-800 font-medium mr-4"
+            onClick={handleSignUpClick}
+          >
+            Signup
           </button>
         )}
       </div>
@@ -70,6 +96,13 @@ function Header() {
         <div className="login-popup">
           <div className="popup-content">
             <LoginPopup onClose={handleClosePopup} />
+          </div>
+        </div>
+      )}
+      {isSignupPopupVisible && (
+        <div className="login-popup">
+          <div className="popup-content">
+            <SignupPopup onClose={handleCloseSignUp} />
           </div>
         </div>
       )}

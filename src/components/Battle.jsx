@@ -23,7 +23,6 @@ function Battle({
         "https://pokemon-battle-game.onrender.com/api/v1/battle-outcomes",
         { playerRed, playerBlue }
       );
-      console.log("the fight result has been sent to api successfully");
     } catch (error) {
       throw new Error("there was an error posting data to api");
     }
@@ -59,7 +58,7 @@ function Battle({
       userId: systemId,
       score: updatedSystemScore,
     };
-    console.log(playerRed, playerBlue);
+
     sendBattleOutcomeToApi(playerRed, playerBlue);
 
     setHasFight(true);

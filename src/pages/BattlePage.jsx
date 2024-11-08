@@ -34,7 +34,7 @@ function BattlePage() {
           setPokemonUser={setPokemonUser}
         />
 
-        <h2 className="text-[1.4rem] text-white mt-[3rem]">Your Roaster</h2>
+        <h2 className="text-[1.4rem] text-white mt-[3rem]">Your Roster</h2>
         <div className="flex flex-wrap gap-[2rem] p-[5rem]">
           {favorites.map((pokemon) => (
             <PokemonCard
